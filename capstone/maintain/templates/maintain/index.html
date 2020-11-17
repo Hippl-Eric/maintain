@@ -3,5 +3,13 @@
 {% block page_title %}Index{% endblock %}
 
 {% block body %}
-    Index
+    {% for car in cars %}
+        <div id="{{ car.id }}" class="car-button" onclick="getcar(this)">
+            <div class="align-middle">
+                <span>{{ car.year }}</span>
+                <span>{{ car.make }}</span>
+                <span>{{ car.model }}</span>
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}

@@ -1,3 +1,7 @@
-body {
-    
+.car-button {
+    height: 200px;
+    width: 200px;
+    background-color: crimson;
+    border-radius: 20px;
+    cursor: pointer;
 }

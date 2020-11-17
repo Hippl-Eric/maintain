@@ -1,16 +1,22 @@
+import json
 from django.shortcuts import render, redirect, reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 
-from .models import User
+from .models import User, Car
 
 # Create your views here.
 
 @login_required(login_url='login')
 def index(request):
-    return render(request, "maintain/index.html")
+
+    # Get all cars owned by user
+    cars = request.user.cars.all()
+    return render(request, "maintain/index.html", {
+        "cars": cars,
+    })
 
 def login_view(request):
     if request.method == "POST":
@@ -58,3 +64,30 @@ def register_view(request):
 def logout_view(request):
     logout(request)
     return redirect(reverse(index))
+
+def car_view(request):
+
+    # Get car from session
+    # car = Car.get(pk=car_id)
+    return render(request, "maintain/car.html")
+
+def get_car(request, car_id):
+    try:
+        car = request.user.cars.get(pk=car_id)
+    except:
+        return JsonResponse({"error": "Invalid request"}, status=400)
+
+    if request.method == "GET":
+        return JsonResponse(car.serialize())
+
+    if request.method == "PUT":
+        data = json.loads(request.body)
+        if data.get("default") is not None:
+            car.default = data["default"]
+            # Store car in session
+        car.save()
+        return HttpResponse(status=204)
+
+
+
+    
