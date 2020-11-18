@@ -3,14 +3,14 @@ document.addEventListener("DOMContentLoaded", function() {
     
 });
 
-function getcar(elem) {
-    console.log(elem);
+function getcar(elem, event) {
+    event.preventDefault();
 
     // Grab the car id and site csrf token
     const car_id = elem.id;
     const csrftoken = Cookies.get('csrftoken');
 
-    // Create request for car details route
+    // Create request for get_car
     const request = new Request(
         `/car/${car_id}`,
         {
@@ -27,7 +27,11 @@ function getcar(elem) {
     fetch(request)
     .then(response => {
         if (response.ok) {
-            window.location.href = "/car/info";
+
+            // Route to original anchor href
+            const childAnchor = elem.children
+            const href = childAnchor[0].href
+            window.location.href = href;
         };
     })
 };

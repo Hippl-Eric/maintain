@@ -68,7 +68,7 @@ def logout_view(request):
 def car_view(request):
 
     # Get car from session
-    # car = Car.get(pk=car_id)
+    car = get_default_car(request)
     return render(request, "maintain/car.html")
 
 def get_car(request, car_id):
@@ -84,10 +84,11 @@ def get_car(request, car_id):
         data = json.loads(request.body)
         if data.get("default") is not None:
             car.default = data["default"]
-            # Store car in session
+            request.session['default_car'] = car.id
         car.save()
         return HttpResponse(status=204)
 
-
-
-    
+def get_default_car(request):
+    car_id = request.session.get("default_car")
+    car = Car.objects.get(pk=car_id)
+    return car
