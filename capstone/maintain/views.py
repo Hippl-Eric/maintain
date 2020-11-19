@@ -14,6 +14,10 @@ def index(request):
 
     # Get all cars owned by user
     cars = request.user.cars.all()
+
+    # Set default car in session if present
+    # TODO
+
     return render(request, "maintain/index.html", {
         "cars": cars,
     })
@@ -65,11 +69,14 @@ def logout_view(request):
     logout(request)
     return redirect(reverse(index))
 
-def car_view(request):
+def car_info_view(request):
 
-    # Get car from session
+    # Get car from session, return index if None
     car = get_default_car(request)
-    return render(request, "maintain/car.html")
+    if car is None:
+        return redirect(reverse("index"))
+    # 
+    return render(request, "maintain/car_info.html")
 
 def get_car(request, car_id):
     try:
@@ -82,13 +89,24 @@ def get_car(request, car_id):
 
     if request.method == "PUT":
         data = json.loads(request.body)
+
+        # Set default car
         if data.get("default") is not None:
+            
+            # Check no other cars set as default previously
+            # TODO
+
+            # Set car as default in DB and session
             car.default = data["default"]
             request.session['default_car'] = car.id
         car.save()
         return HttpResponse(status=204)
 
 def get_default_car(request):
-    car_id = request.session.get("default_car")
-    car = Car.objects.get(pk=car_id)
-    return car
+    """ Return car object from id stored in session """
+    try:
+        car_id = request.session.get("default_car")
+        car = request.user.cars.get(pk=car_id)
+        return car
+    except Car.DoesNotExist:
+        return None
