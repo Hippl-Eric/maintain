@@ -75,7 +75,11 @@ def car_info_view(request):
     car = get_default_car(request)
     if car is None:
         return redirect(reverse("index"))
-    # 
+    
+    logs = car.logs.all()
+    
+
+
     return render(request, "maintain/car_info.html")
 
 def get_car(request, car_id):
