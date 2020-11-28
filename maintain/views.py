@@ -69,19 +69,62 @@ def logout_view(request):
     logout(request)
     return redirect(reverse(index))
 
+@login_required(login_url='login')
 def car_info_view(request):
 
-    # Get car from session, return index if None
-    car = get_default_car(request)
-    if car is None:
-        return redirect(reverse("index"))
-    
-    logs = car.logs.all()
-    
+    if request.method == "POST":
+        pass
 
+    else:
 
-    return render(request, "maintain/car_info.html")
+        # Get car from session
+        car = get_default_car(request)
+        
+        # TODO get car's past due reminders
+        past_due_reminders = []
 
+        # Return car info page
+        return render(request, "maintain/car_info.html", {
+            "car": car,
+            "past_due_reminders": past_due_reminders,
+        })
+
+@login_required(login_url='login')
+def car_mileage_view(request):
+
+    if request.method == "POST":
+        pass
+
+    else:
+
+        # Get car from session
+        car = get_default_car(request)
+        
+        # TODO get car's mileage logs
+
+        # Return car mileage page
+        return render(request, "maintain/car_mileage.html", {
+        })
+
+@login_required(login_url='login')
+def car_service_view(request):
+
+    if request.method == "POST":
+        pass
+
+    else:
+
+        # Get car from session
+        car = get_default_car(request)
+        
+        # TODO get car's services
+        # TODO get car's reminders
+
+        # Return car service page
+        return render(request, "maintain/car_service.html", {
+        })
+
+@login_required(login_url='login')
 def get_car(request, car_id):
     try:
         car = request.user.cars.get(pk=car_id)

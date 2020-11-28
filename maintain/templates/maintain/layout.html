@@ -39,27 +39,19 @@
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
                         <li class="nav-item active">
-                            <a class="nav-link" href="{% url 'index' %}">{{ user.username }} <span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="{% url 'index' %}">{{ user.username }}</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'car_info' %}">Vehicle</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Mileage</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Service</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Dropdown link
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </li>
+                        {% if request.session.default_car %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'car_info' %}">Vehicle</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'car_mileage' %}">Mileage</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'car_service' %}">Service</a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                         </li>
