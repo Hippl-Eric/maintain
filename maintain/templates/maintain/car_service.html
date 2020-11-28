@@ -4,4 +4,30 @@
 
 {% block body %}
     Service Page
+    <div>
+        Log Service Button
+    </div>
+    <div>
+        Over Due:
+        {% for log in overdue_service_logs %}
+            {% include "maintain/service-block.html" %}
+        {% endfor %}
+    </div>
+    <div>
+        Upcoming:
+        {% for log in upcoming_service_logs %}
+            {% include "maintain/service-block.html" %}
+        {% endfor %}
+    </div>
+    <div>
+        Past:
+        {% for log in past_service_logs %}
+            {% include "maintain/service-block.html" %}
+        {% endfor %}
+    </div>
+
+
+
+
+
 {% endblock %}

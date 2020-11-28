@@ -1,0 +1,12 @@
+<div class="service_container">
+    <div>Log Time: {{ log.timestamp }}</div>
+    <div>Log Mileage: {{ log.mileage }}</div>
+    {% for service in log.services.all %}
+        <div>Service Name:{{ service.name }}</div>
+        <div>Parts:
+            {% for part in service.parts.all %}
+                {{ part.name }}, 
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>

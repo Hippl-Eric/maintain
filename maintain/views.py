@@ -4,8 +4,10 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.db.models import F, Q
+from datetime import datetime, date, timedelta
 
-from .models import User, Car
+from .models import User, Car, Mileage_Log, Fuel, Service, Part, Reminder
 
 # Create your views here.
 
@@ -117,11 +119,26 @@ def car_service_view(request):
         # Get car from session
         car = get_default_car(request)
         
-        # TODO get car's services
-        # TODO get car's reminders
+        # Get past service logs
+        past_service_logs = car.logs.filter(services__name__isnull=False).order_by(F('timestamp').desc())
+
+        # Get service logs for upcoming reminders
+        upcoming_service_logs = (car.logs.filter(services__name__isnull=False)
+        .filter(services__reminder__date__gte=date.today(),
+        services__reminder__mileage__gte=car.current_mileage)
+        .filter(Q(services__reminder__date__lte=date.today() + timedelta(days=30)) | 
+        Q(services__reminder__mileage__lte=car.current_mileage+1000)))
+
+        # Get service logs for past due reminders
+        overdue_service_logs = (car.logs.filter(services__name__isnull=False)
+        .filter(Q(services__reminder__date__lte=date.today() - timedelta(days=1)) | 
+        Q(services__reminder__mileage__lte=car.current_mileage - 1)))
 
         # Return car service page
         return render(request, "maintain/car_service.html", {
+            "past_service_logs": past_service_logs,
+            "upcoming_service_logs": upcoming_service_logs,
+            "overdue_service_logs": overdue_service_logs,
         })
 
 @login_required(login_url='login')
