@@ -8,19 +8,23 @@
         Log Service Button
     </div>
     <div>
-        Over Due:
-        {% for log in overdue_service_logs %}
-            {% include "maintain/service-block.html" %}
-        {% endfor %}
+        Overdue:
+        {% with alert='danger' %}
+            {% for reminder in overdue_reminders %}
+                {% include "maintain/reminder-block.html" %}
+            {% endfor %}
+        {% endwith %}
     </div>
     <div>
-        Upcoming:
-        {% for log in upcoming_service_logs %}
-            {% include "maintain/service-block.html" %}
-        {% endfor %}
+        Upcoming (1,000 miles or 30 days):
+        {% with alert='warning' %}
+            {% for reminder in upcoming_reminders %}
+                {% include "maintain/reminder-block.html" %}
+            {% endfor %}
+        {% endwith %}
     </div>
     <div>
-        Past:
+        Completed Services:
         {% for log in past_service_logs %}
             {% include "maintain/service-block.html" %}
         {% endfor %}

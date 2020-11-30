@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Q, F
 from django.contrib.auth.models import AbstractUser
+from datetime import datetime, date, timedelta
 
 # Create your models here.
 
@@ -29,6 +30,30 @@ class Car(models.Model):
     def current_mileage(self):
         log = self.logs.order_by(F('mileage').desc())
         return log.first().mileage
+
+    # Return all logs in descending order that had service performed
+    @property
+    def get_service_logs(self):
+        return self.logs.filter(services__name__isnull=False).order_by(F('timestamp').desc())
+
+    # Return all logs that had fuel logged
+
+    # Return all upcoming reminders
+    @property
+    def get_reminders_upcoming(self):
+        upcoming_time_delta = timedelta(days=30)
+        upcoming_mileage_delta = 1000
+        return (Reminder.objects.filter(service__log__car = self).filter(completed = False)
+        .filter(date__gte = date.today(), mileage__gte = self.current_mileage)
+        .filter(Q(date__lte = date.today() + upcoming_time_delta) | 
+        Q(mileage__lte = self.current_mileage + upcoming_mileage_delta)))
+
+    # Return all past due reminders
+    @property
+    def get_reminders_overdue(self):
+        return (Reminder.objects.filter(service__log__car = self).filter(completed = False)
+        .filter(Q(date__lte = date.today() - timedelta(days=1)) | 
+        Q(mileage__lte = self.current_mileage - 1)))
 
     def __str__(self):
         return f"{self.make} {self.model}"

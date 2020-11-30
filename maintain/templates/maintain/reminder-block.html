@@ -1,0 +1,20 @@
+<div class="service_container alert alert-{{ alert }}">
+    <div class="row">
+        <div class="col">
+            Complete by: {{ reminder.date }} or {{ reminder.mileage }} miles
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col">
+            <a class="alert-link" href="#{{ service.id }}" >
+                Service: {{ reminder.service.name }}
+            </a>
+        </div>
+        <div class="col-auto">
+            <a class="alert-link" href="#{{ service.id }}" >
+                Log Service Complete
+            </a>
+        </div>
+    </div>
+</div>

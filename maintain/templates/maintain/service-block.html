@@ -1,12 +1,42 @@
-<div class="service_container">
-    <div>Log Time: {{ log.timestamp }}</div>
-    <div>Log Mileage: {{ log.mileage }}</div>
-    {% for service in log.services.all %}
-        <div>Service Name:{{ service.name }}</div>
-        <div>Parts:
-            {% for part in service.parts.all %}
-                {{ part.name }}, 
-            {% endfor %}
+<div class="service_container alert alert-secondary">
+    <div class="row">
+        <div class="col">
+            {{ log.timestamp }}
         </div>
-    {% endfor %}
+        <div class="col-auto">
+            Mileage: {{ log.mileage }}
+        </div>
+    </div>
+    <hr>
+
+        {% for service in log.services.all %}
+            <div class="row">
+                <div class="col">
+                    <a class="alert-link" data-toggle="collapse" href="#collapseExample{{ service.id }}" aria-expanded="false" aria-controls="collapseExample{{ service.id }}">
+                        Service: {{ service.name }}
+                    </a>
+                </div>
+            </div>
+            <div class="collapse" id="collapseExample{{ service.id }}">
+                <div class="row">
+                    <div class="col">
+                        Parts:
+                    </div>
+                </div>
+                {% for part in service.parts.all %}
+                    <div class="row">
+                        <div class="col">
+                            {{ part.name }}
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="row">
+                        <div class="col">
+                            No parts logged.
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>        
+        {% endfor %}
+
 </div>
