@@ -66,6 +66,12 @@
                 </ul>
             </div>
         </nav>
+        <!--Current car navbar-->
+        {% if request.session.default_car %}
+            <nav class="navbar sticky-top navbar-light bg-light">
+                <p>Current: {{ request.session.default_car }}</p>
+            </nav>
+        {% endif %}
 
         <div class="body container-md">
             {% if alert %}

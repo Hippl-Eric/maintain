@@ -111,14 +111,42 @@ def car_mileage_view(request):
 @login_required(login_url='login')
 def car_service_view(request):
 
+    # Get car from session
+    car = get_default_car(request)
+        
     if request.method == "POST":
-        pass
+        post_dict = request.POST
+
+        # Parse date (MM/DD/YYYY)
+        form_date = request.POST["date"]
+        month, day, year = int(form_date[0:2]), int(form_date[3:5]), int(form_date[6:10])
+        log_date = date(year=year, month=month, day=day)
+
+        # Parse mileage (positive integer)
+        mileage = int(request.POST["mileage"])
+
+        log = Log_Obj(date=log_date, mileage=mileage)
+        mile_log = Mileage_Log(timestamp=log_date, mileage=mileage, car=car)
+        mile_log.save()
+
+        # Create service
+        service_name = request.POST["service"]
+        service = Service(name=service_name, log=mile_log)
+        service.save()
+
+        # Get or create parts
+        form_parts = {key: val for key, val in request.POST.items() if key.startswith("part")}
+        num_parts = len(form_parts)//2
+        for i in range(num_parts):
+            part_name = form_parts[f'part-name-{i+1}']
+            part_number = form_parts[f'part-number-{i+1}']
+            part, created = Part.objects.get_or_create(name=part_name, number=part_number)
+            part.services.add(service)
+
+        return redirect(reverse("car_service"))
 
     else:
 
-        # Get car from session
-        car = get_default_car(request)
-        
         # Get past service logs
         past_service_logs = car.get_service_logs
 
