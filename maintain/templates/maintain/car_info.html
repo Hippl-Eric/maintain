@@ -1,7 +1,28 @@
 {% extends "maintain/layout.html" %}
 
-{% block page_title %}{{ car.make }}{% endblock %}
+{% block page_title %}{% endblock %}
 
 {% block body %}
-    Info Page
+    {% if overdue_reminders %}
+        <div class="alert alert-danger" role="alert">
+            <a class="alert-link" href="{% url 'car_service' %}">{{ overdue_reminders.count }} overdue service reminder(s)</a>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col">
+            {% if car.image %}
+                Car image
+            {% else %}
+                Default Car image
+            {% endif %}
+        </div>
+    </div>
+    {% with data=car.serialize %}
+        {% for key, val in data.items %}
+            <div class="row">
+                <div class="col text-capitalize text-sm-right font-weight-bold">{{ key }}</div>
+                <div class="col">{{ val }}</div>
+            </div>
+        {% endfor %}
+    {% endwith %}
 {% endblock %}

@@ -1,9 +1,5 @@
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("DOM Loaded!")
-    
-});
 
-function getcar(elem, event) {
+function setDefaultCar(elem, event) {
     event.preventDefault();
 
     // Grab the car id and site csrf token
@@ -12,7 +8,7 @@ function getcar(elem, event) {
 
     // Create request for get_car
     const request = new Request(
-        `/car/${car_id}`,
+        `/defaultcar/${car_id}`,
         {
             method: "PUT",
             headers: {'X-CSRFToken': csrftoken},

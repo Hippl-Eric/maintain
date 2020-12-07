@@ -1,17 +1,33 @@
 {% extends "maintain/layout.html" %}
 
-{% block page_title %}Index{% endblock %}
+{% block page_title %}Your Cars{% endblock %}
 
 {% block body %}
-    {% for car in cars %}
-        <div id="{{ car.id }}" class="car-button" onclick="getcar(this, event)">
-            <a href="{% url 'car_info' %}">
-                <div class="align-middle">
-                    <span>{{ car.year }}</span>
-                    <span>{{ car.make }}</span>
-                    <span>{{ car.model }}</span>
+    <div class="row">
+        {% for car in cars %}
+            <div class="col d-flex justify-content-center">
+                <div id="{{ car.id }}" class="car-button d-flex align-items-center" onclick="setDefaultCar(this, event)">
+                    <a href="{% url 'car_info' %}" class="d-flex justify-content-center">
+                        <span class="d-flex align-items-center">
+                            {{ car.year }}<br>
+                            {{ car.make }}<br>
+                            {{ car.model }}
+                        </span>
+                    </a>
                 </div>
-            </a>
-        </div>
-    {% endfor %}
+            </div>  
+        {% endfor %}
+        <div class="col d-flex justify-content-center">
+            <div id="add-car" class="car-button d-flex align-items-center">
+                <a href="#" class="d-flex justify-content-center">
+                    <span class="d-flex align-items-center">
+                        Add<br>
+                        New<br>
+                        Car
+                    </span>
+                </a>
+            </div>
+        </div>  
+    </div>
+    <canvas id="mileage-plot" data-plot="miles" data-car="all"></canvas>
 {% endblock %}

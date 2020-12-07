@@ -31,6 +31,17 @@ class Car(models.Model):
         log = self.logs.order_by(F('mileage').desc())
         return log.first().mileage
 
+    # Get starting mileage from mileage log (returns int)
+    @property
+    def starting_mileage(self):
+        log = self.logs.order_by('mileage')
+        return log.first().mileage
+
+    # Return all logs (ascending)
+    @property
+    def get_logs(self):
+        return self.logs.all().order_by('timestamp')
+
     # Return all logs in descending order that had service performed
     @property
     def get_service_logs(self):
@@ -60,15 +71,12 @@ class Car(models.Model):
 
     def serialize(self):
         return {
-            "id": self.id,
             "vin": self.vin,
             "make": self.make,
             "model": self.model,
             "year": self.year,
-            "purchase_date": self.purchase_date,
-            "mileage": self.mileage,
-            "owner": self.owner.username,
-            "default": self.default
+            "current mileage": self.current_mileage,
+            "purchase date": self.purchase_date,
         }
     
     def session_store(self):

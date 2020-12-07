@@ -82,13 +82,13 @@ def car_info_view(request):
         # Get car from session
         car = get_default_car(request)
         
-        # TODO get car's past due reminders
-        past_due_reminders = []
+        # Get overdue reminders
+        overdue_reminders = car.get_reminders_overdue
 
         # Return car info page
         return render(request, "maintain/car_info.html", {
             "car": car,
-            "past_due_reminders": past_due_reminders,
+            "overdue_reminders": overdue_reminders,
         })
 
 @login_required(login_url='login')
@@ -102,8 +102,6 @@ def car_mileage_view(request):
         # Get car from session
         car = get_default_car(request)
         
-        # TODO get car's mileage logs
-
         # Return car mileage page
         return render(request, "maintain/car_mileage.html", {
         })
@@ -164,14 +162,11 @@ def car_service_view(request):
         })
 
 @login_required(login_url='login')
-def get_car(request, car_id):
+def set_default_car(request, car_id):
     try:
         car = request.user.cars.get(pk=car_id)
     except:
         return JsonResponse({"error": "Invalid request"}, status=400)
-
-    if request.method == "GET":
-        return JsonResponse(car.serialize())
 
     if request.method == "PUT":
         data = json.loads(request.body)
@@ -196,3 +191,39 @@ def get_default_car(request):
         return car
     except Car.DoesNotExist:
         return None
+
+def mileage_logs(request):
+    if request.method == "PUT":
+
+        # Load request data
+        data = json.loads(request.body)
+
+        # Determine whether default car or all cars
+        if data.get("car") == "default":
+            cars = [get_default_car(request)]
+        if data.get("car") == "all":
+            cars = request.user.cars.all()
+
+        # Plot total mileage
+        if data.get("type") == "miles":
+            data = []
+            for car in cars:
+                logs = car.get_logs
+                obj = {
+                    "label": f"{car.make} {car.model}",
+                    "data": [{"x": str(log.timestamp), "y": log.mileage} for log in logs]
+                    }
+                data.append(obj)
+            return JsonResponse(json.dumps(data), safe=False)
+
+        # Plot MPG
+        if data.get("type") == "mpg":
+            pass
+            # TODO
+
+    # PUT method required
+    else:
+        return JsonResponse({
+            "error": "PUT request required."
+        }, status=400)
+
