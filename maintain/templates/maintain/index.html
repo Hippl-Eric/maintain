@@ -7,7 +7,7 @@
         {% for car in cars %}
             <div class="col d-flex justify-content-center">
                 <div id="{{ car.id }}" class="car-button d-flex align-items-center" onclick="setDefaultCar(this, event)">
-                    <a href="{% url 'car_info' %}" class="d-flex justify-content-center">
+                    <a href="{% url 'car_mileage' %}" class="d-flex justify-content-center">
                         <span class="d-flex align-items-center">
                             {{ car.year }}<br>
                             {{ car.make }}<br>

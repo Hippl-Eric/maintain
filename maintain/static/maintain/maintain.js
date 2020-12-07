@@ -10,12 +10,9 @@ function setDefaultCar(elem, event) {
     const request = new Request(
         `/defaultcar/${car_id}`,
         {
-            method: "PUT",
+            method: "GET",
             headers: {'X-CSRFToken': csrftoken},
             mode: "same-origin",
-            body: JSON.stringify({
-                default: true,
-            })
         }
     );
 

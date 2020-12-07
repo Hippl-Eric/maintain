@@ -1,8 +1,20 @@
 {% extends "maintain/layout.html" %}
 
-{% block page_title %}{{ car.make }}{% endblock %}
+{% block page_title %}{% endblock %}
 
 {% block body %}
-    Mileage Page
+    {% if overdue_reminders %}
+        <div class="alert alert-danger" role="alert">
+            <a class="alert-link" href="{% url 'car_service' %}">{{ overdue_reminders.count }} overdue service reminder(s)</a>
+        </div>
+    {% endif %}
+    {% with data=car.serialize %}
+        {% for key, val in data.items %}
+            <div class="row">
+                <div class="col text-capitalize text-sm-right font-weight-bold">{{ key }}</div>
+                <div class="col">{{ val }}</div>
+            </div>
+        {% endfor %}
+    {% endwith %}
     <canvas id="mileage-plot" data-plot="miles" data-car="default"></canvas>
 {% endblock %}

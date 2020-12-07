@@ -72,7 +72,7 @@ def logout_view(request):
     return redirect(reverse(index))
 
 @login_required(login_url='login')
-def car_info_view(request):
+def car_mileage_view(request):
 
     if request.method == "POST":
         pass
@@ -85,25 +85,10 @@ def car_info_view(request):
         # Get overdue reminders
         overdue_reminders = car.get_reminders_overdue
 
-        # Return car info page
-        return render(request, "maintain/car_info.html", {
-            "car": car,
-            "overdue_reminders": overdue_reminders,
-        })
-
-@login_required(login_url='login')
-def car_mileage_view(request):
-
-    if request.method == "POST":
-        pass
-
-    else:
-
-        # Get car from session
-        car = get_default_car(request)
-        
         # Return car mileage page
         return render(request, "maintain/car_mileage.html", {
+            "car": car,
+            "overdue_reminders": overdue_reminders,
         })
 
 @login_required(login_url='login')
@@ -168,20 +153,14 @@ def set_default_car(request, car_id):
     except:
         return JsonResponse({"error": "Invalid request"}, status=400)
 
-    if request.method == "PUT":
-        data = json.loads(request.body)
+    # Set or update default car
+    update_default_car(request, car)
+    return HttpResponse(status=200)
 
-        # Set default car
-        if data.get("default") is not None:
-            
-            # Check no other cars set as default previously
-            # TODO
-
-            # Set car as default in DB and session
-            car.default = data["default"]
-            request.session['default_car'] = car.id
-        car.save()
-        return HttpResponse(status=204)
+def update_default_car(request, car):
+    """ Set/update car in the request session """
+    request.session['default_car'] = car.id
+    request.session['default_car_info'] = f"{car.year} {car.make} {car.model}, {car.current_mileage} miles"
 
 def get_default_car(request):
     """ Return car object from id stored in session """

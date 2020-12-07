@@ -16,8 +16,6 @@ class Car(models.Model):
     purchase_date = models.DateField(blank=True, null=True)
     starting_mileage = models.CharField(max_length=6, blank=True, null=True)
     owner = models.ForeignKey("User", on_delete=models.CASCADE, related_name="cars")
-    default = models.BooleanField(default=False)
-
 
     # TODO Constraint default must be unique
     class Meta:

@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import User, Car, Mileage_Log, Fuel, Service, Part, Reminder
 
 class CarAdmin(admin.ModelAdmin):
-    list_display = ["owner", "id", "make", "model", "default"]
+    list_display = ["owner", "id", "make", "model"]
 
 class LogAdmin(admin.ModelAdmin):
     list_display = ["timestamp", "car", "mileage"]

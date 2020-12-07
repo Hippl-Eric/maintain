@@ -45,13 +45,10 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
-                        <li class="nav-item active">
+                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'index' %}">{{ user.username }}</a>
                         </li>
                         {% if request.session.default_car %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'car_info' %}">Vehicle</a>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'car_mileage' %}">Mileage</a>
                             </li>
@@ -75,8 +72,8 @@
         </nav>
         <!--Current car navbar-->
         {% if request.session.default_car %}
-            <nav class="navbar sticky-top navbar-light bg-light">
-                <p>Current: {{ request.session.default_car }}</p>
+            <nav class="car-info-banner navbar sticky-top navbar-light">
+                <span>Current Vehicle: <strong>{{ request.session.default_car_info }}</strong></span>
             </nav>
         {% endif %}
 

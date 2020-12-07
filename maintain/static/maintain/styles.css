@@ -1,3 +1,8 @@
+.car-info-banner {
+    line-height: 1rem;
+    background-color: #d4edda;
+}
+
 .car-button {
     height: 200px;
     width: 200px;
