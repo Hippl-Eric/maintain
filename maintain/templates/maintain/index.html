@@ -19,15 +19,82 @@
         {% endfor %}
         <div class="col d-flex justify-content-center">
             <div id="add-car" class="car-button d-flex align-items-center">
-                <a href="#" class="d-flex justify-content-center">
-                    <span class="d-flex align-items-center">
-                        Add<br>
-                        New<br>
-                        Car
-                    </span>
+                <a href="#" class="d-flex justify-content-center" data-toggle="modal" data-target="#NewCarModal">
+                    <span class="d-flex align-items-center">Add<br>New<br>Car</span>
                 </a>
             </div>
         </div>  
     </div>
     <canvas id="mileage-plot" data-plot="miles" data-car="all"></canvas>
+
+    <!-- Modal -->
+    <div class="modal fade" id="NewCarModal" tabindex="-1" role="dialog" aria-labelledby="NewCarFormTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="NewCarFormTitle">Add New Car</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'index' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label for="make" class="col-2 col-form-label">Make</label>
+                            <div class="col-10">
+                                <input type="text" class="form-control" name="make" placeholder="Make" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="model" class="col-2 col-form-label">Model</label>
+                            <div class="col-10">
+                                <input type="text" class="form-control" name="model" placeholder="Model" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="year" class="col-2 col-form-label">Year</label>
+                            <div class="col-10">
+                                <input type="text" class="form-control" name="year" placeholder="Year" maxlength="4" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="vin" class="col-2 col-form-label">Vin</label>
+                            <div class="col-10">
+                                <input type="text" class="form-control" name="vin" placeholder="Vin" maxlength="17" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="current-mile" class="col-3 col-form-label">Current Mileage</label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="current-mile" placeholder="Current Mileage" min="0" required>
+                            </div>
+                        </div>
+                        <small class="form-text text-muted">
+                            Optional:
+                        </small>
+                        <div class="form-group row">
+                            <label for="purchase-date" class="col-3 col-form-label">Purchase Date</label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="purchase-date" placeholder="Purchase Date (MM/DD/YYYY)" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="starting-mile" class="col-3 col-form-label">Starting Mileage</label>
+                            <div class="col">
+                                <input type="text" class="form-control" name="starting-mile" placeholder="Starting Mileage" min="0" required>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row justify-content-between">
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
 {% endblock %}

@@ -14,15 +14,41 @@ from .models import User, Car, Mileage_Log, Fuel, Service, Part, Reminder
 @login_required(login_url='login')
 def index(request):
 
-    # Get all cars owned by user
-    cars = request.user.cars.all()
+    # Add new car
+    if request.method == "POST":
 
-    # Set default car in session if present
-    # TODO
+        # Parse new car form data
+        make = request.POST["make"]
+        model = request.POST["model"]
+        year = request.POST["year"]
+        vin = request.POST["vin"]
+        starting_mile = request.POST["starting-mile"]
+        purchase = request.POST["purchase-date"]
+        month, day, year = int(purchase[0:2]), int(purchase[3:5]), int(purchase[6:10])
+        purchase_date = date(year=year, month=month, day=day)
 
-    return render(request, "maintain/index.html", {
-        "cars": cars,
-    })
+        # Create new car and add to session
+        car = Car(vin=vin, make=make, model=model, year=year, purchase_date=purchase_date, purchase_mileage=starting_mile, owner=request.user)
+        car.save()
+
+        # Create first mileage log
+        current_mile = request.POST["current-mile"]
+        log = Mileage_Log(mileage=current_mile, timestamp=date.today(), car=car)
+        log.save()
+
+        # Set new car as default
+        update_default_car(request=request, car=car)
+
+        return redirect(reverse("index"))
+
+    # GET index page
+    else:
+
+        # Get all cars owned by user
+        cars = request.user.cars.all()
+        return render(request, "maintain/index.html", {
+            "cars": cars,
+        })
 
 def login_view(request):
     if request.method == "POST":
@@ -76,6 +102,7 @@ def car_mileage_view(request):
 
     if request.method == "POST":
         pass
+        # TODO log mileage/fuel log
 
     else:
 
@@ -125,6 +152,8 @@ def car_service_view(request):
             part_number = form_parts[f'part-number-{i+1}']
             part, created = Part.objects.get_or_create(name=part_name, number=part_number)
             part.services.add(service)
+
+        # TODO Create reminder
 
         return redirect(reverse("car_service"))
 

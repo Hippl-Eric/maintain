@@ -14,14 +14,8 @@ class Car(models.Model):
     model = models.CharField(max_length=50)
     year = models.CharField(max_length=4)
     purchase_date = models.DateField(blank=True, null=True)
-    starting_mileage = models.CharField(max_length=6, blank=True, null=True)
+    purchase_mileage = models.CharField(max_length=6, blank=True, null=True)
     owner = models.ForeignKey("User", on_delete=models.CASCADE, related_name="cars")
-
-    # TODO Constraint default must be unique
-    class Meta:
-        models.constraints = [
-            models.UniqueConstraint(fields=['owner', 'default'], name='one_default_car')
-        ]
 
     # Use property to get current mileage from mileage log (returns int)
     @property
@@ -45,7 +39,7 @@ class Car(models.Model):
     def get_service_logs(self):
         return self.logs.filter(services__name__isnull=False).order_by(F('timestamp').desc())
 
-    # Return all logs that had fuel logged
+    # TODO Return all logs that had fuel logged
 
     # Return all upcoming reminders
     @property
@@ -77,21 +71,10 @@ class Car(models.Model):
             "purchase date": self.purchase_date,
         }
     
-    def session_store(self):
-        return {
-            "id": self.id,
-            "name": f"{self.make} {self.model}"
-        }
-
-class Mileage_LogManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().order_by(F('timestamp').desc())
-
 class Mileage_Log(models.Model):
     timestamp = models.DateTimeField(auto_created=True)
     mileage = models.PositiveIntegerField()
     car = models.ForeignKey("Car", on_delete=models.CASCADE, related_name="logs")
-    objects = Mileage_LogManager
 
     def __str__(self):
         return f"{self.mileage}, {self.car}"
