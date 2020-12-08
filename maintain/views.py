@@ -100,14 +100,29 @@ def logout_view(request):
 @login_required(login_url='login')
 def car_mileage_view(request):
 
+    # Get car from session
+    car = get_default_car(request)
+
+    # Mileage log form submission
     if request.method == "POST":
-        pass
-        # TODO log mileage/fuel log
+        
+        # Parse form data
+        mileage = request.POST["mileage"]
+        fuel = request.POST["fuel"]
+        fuel = round(float(fuel), 2)
+        log_date = request.POST["date"]
+        month, day, year = int(log_date[0:2]), int(log_date[3:5]), int(log_date[6:10])
+        log_date = date(year=year, month=month, day=day)
+
+        # Create new mileage/fuel log
+        log = Mileage_Log(timestamp=log_date, mileage=mileage, car=car)
+        log.save()
+        fuel = Fuel(amount=fuel, log=log)
+        fuel.save()
+
+        return redirect(reverse('car_mileage'))
 
     else:
-
-        # Get car from session
-        car = get_default_car(request)
         
         # Get overdue reminders
         overdue_reminders = car.get_reminders_overdue
@@ -188,8 +203,19 @@ def set_default_car(request, car_id):
 
 def update_default_car(request, car):
     """ Set/update car in the request session """
+    
+    # Check database for previous default car and clear
+    def_car = request.user.default_car
+    if def_car:
+        def_car.default = False
+        def_car.save()
+    
+    # Set car as default
+    car.default = True
+    car.save()
+
+    # Store in session
     request.session['default_car'] = car.id
-    request.session['default_car_info'] = f"{car.year} {car.make} {car.model}, {car.current_mileage} miles"
 
 def get_default_car(request):
     """ Return car object from id stored in session """

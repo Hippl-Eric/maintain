@@ -73,7 +73,7 @@
         <!--Current car navbar-->
         {% if request.session.default_car %}
             <nav class="car-info-banner navbar sticky-top navbar-light">
-                <span>Current Vehicle: <strong>{{ request.session.default_car_info }}</strong></span>
+                <span>Current Vehicle: <strong>{{ request.user.default_car.info }}</strong></span>
             </nav>
         {% endif %}
 
@@ -83,7 +83,6 @@
                     {{ alert_message }}
                 </div>
             {% endif %}
-            <h1>{% block page_title %}{% endblock %}</h1>
 
             {% block body %}
             {% endblock %}

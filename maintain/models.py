@@ -6,7 +6,14 @@ from datetime import datetime, date, timedelta
 # Create your models here.
 
 class User(AbstractUser):
-    pass
+
+    @property
+    def default_car(self):
+        try:
+            car = self.cars.get(default=True)
+        except Car.DoesNotExist:
+            car = None
+        return car
 
 class Car(models.Model):
     vin = models.CharField(max_length=17)
@@ -16,6 +23,7 @@ class Car(models.Model):
     purchase_date = models.DateField(blank=True, null=True)
     purchase_mileage = models.CharField(max_length=6, blank=True, null=True)
     owner = models.ForeignKey("User", on_delete=models.CASCADE, related_name="cars")
+    default = models.BooleanField(default=False)
 
     # Use property to get current mileage from mileage log (returns int)
     @property
@@ -57,6 +65,10 @@ class Car(models.Model):
         return (Reminder.objects.filter(service__log__car = self).filter(completed = False)
         .filter(Q(date__lte = date.today() - timedelta(days=1)) | 
         Q(mileage__lte = self.current_mileage - 1)))
+
+    @property
+    def info(self):
+        return f"{self.year} {self.make} {self.model}, {self.current_mileage} miles"
 
     def __str__(self):
         return f"{self.make} {self.model}"
