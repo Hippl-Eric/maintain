@@ -28,3 +28,33 @@ function setDefaultCar(elem, event) {
         };
     })
 };
+
+if (document.getElementById("addPartBtn")) {
+    document.getElementById("addPartBtn").addEventListener("click", addPart, true);
+}
+
+function addPart() {
+
+    // Grab the part group div and determine number of existing parts
+    const partGroup = document.getElementById("part-group");
+    const numPart = partGroup.childElementCount + 1;
+
+    // Clone the first part element
+    let part = partGroup.firstElementChild.cloneNode(true)
+    let inputs = part.getElementsByTagName("input")
+    for (let input of inputs) {
+
+        // Get the input's name attribute
+        let name = input.getAttribute("name")
+
+        // Change the name attribute based on new part num
+        let pos = name.lastIndexOf("-")
+        name = name.slice(0, pos+1) + numPart.toString()
+
+        // Set new name
+        input.setAttribute("name", name)
+    }
+    
+    // Add part to end of partGroup
+    partGroup.append(part)
+}
