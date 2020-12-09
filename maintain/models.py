@@ -55,7 +55,8 @@ class Car(models.Model):
         upcoming_time_delta = timedelta(days=30)
         upcoming_mileage_delta = 1000
         return (Reminder.objects.filter(service__log__car = self).filter(completed = False)
-        .filter(date__gte = date.today(), mileage__gte = self.current_mileage)
+        .filter(Q(date__gte = date.today()) | Q(date__isnull = True))
+        .filter(Q(mileage__gte = self.current_mileage) | Q(mileage__isnull = True))
         .filter(Q(date__lte = date.today() + upcoming_time_delta) | 
         Q(mileage__lte = self.current_mileage + upcoming_mileage_delta)))
 

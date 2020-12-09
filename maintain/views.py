@@ -140,7 +140,10 @@ def car_service_view(request):
     car = get_default_car(request)
         
     if request.method == "POST":
-        post_dict = request.POST
+
+        # Ensure minimum form data received
+        if not request.POST["date"] or not request.POST["mileage"] or not request.POST["service"]:
+            return redirect(reverse("car_service"))
 
         # Parse date (MM/DD/YYYY)
         form_date = request.POST["date"]
@@ -149,8 +152,6 @@ def car_service_view(request):
 
         # Parse mileage (positive integer)
         mileage = int(request.POST["mileage"])
-
-        log = Log_Obj(date=log_date, mileage=mileage)
         mile_log = Mileage_Log(timestamp=log_date, mileage=mileage, car=car)
         mile_log.save()
 
@@ -164,11 +165,23 @@ def car_service_view(request):
         num_parts = len(form_parts)//2
         for i in range(num_parts):
             part_name = form_parts[f'part-name-{i+1}']
-            part_number = form_parts[f'part-number-{i+1}']
-            part, created = Part.objects.get_or_create(name=part_name, number=part_number)
-            part.services.add(service)
+            if part_name:
+                part_number = form_parts[f'part-number-{i+1}']
+                part, created = Part.objects.get_or_create(name=part_name, number=part_number)
+                part.services.add(service)
 
-        # TODO Create reminder
+        # Create reminder
+        if request.POST["duration"] or request.POST["mile-amount"]:
+            reminder = Reminder(service=service)
+            if request.POST["duration"]:
+                duration = int(365 * (int(request.POST["duration"]) / 12))
+                reminder_date = log_date + timedelta(days=duration)
+                reminder.date = reminder_date
+            if request.POST["mile-amount"]:
+                mile_amount = int(request.POST["mile-amount"])
+                reminder_mile = mileage + mile_amount
+                reminder.mileage = reminder_mile
+            reminder.save()
 
         return redirect(reverse("car_service"))
 

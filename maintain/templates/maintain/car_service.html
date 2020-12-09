@@ -52,20 +52,20 @@
                     <form action="{% url 'car_service' %}" method="POST">
                         {% csrf_token %}
                         <div class="form-row">
-                            <div class="form-group col">
+                            <div class="form-group col-sm">
                                 <label for="date">Date of Service</label>
                                 <input type="datetime" class="form-control" name="date" placeholder="MM/DD/YYYY" required>
                             </div>
-                            <div class="form-group col">
-                                <label for="mileage">Mileage</label>
-                                <input type="text" class="form-control" name="mileage" placeholder="Current Vehicle Mileage" required>
+                            <div class="form-group col-sm">
+                                <label for="mileage">Current Vehicle Mileage</label>
+                                <input type="text" class="form-control" name="mileage" placeholder="Mileage" required>
                             </div>
                         </div>
                         <hr>
 
                         <div class="form-group">
                             <label for="service">Service</label>
-                            <input type="text"  class="form-control" name="service" placeholder="Service Name">
+                            <input type="text"  class="form-control" name="service" placeholder="Service Name" required>
                         </div>
 
                         <div class="form-group">
@@ -78,12 +78,25 @@
                                     <input type="text"  class="form-control" name="part-number-1" placeholder="Part Number">
                                 </div>
                             </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label for="reminder">Add a Reminder:
+                                <small class="form-text text-muted">
+                                    Specify a duration (in months) from the date of service or number of miles (from service mileage) to be reminded to complete service again.
+                                </small>        
+                            </label>
                             <div class="form-row">
                                 <div class="form-group col">
-                                    <input type="text"  class="form-control" name="part-name-2" placeholder="Part Name">
+                                    <label for="duration">Duration (Months)</label>
+                                    <input type="text"  class="form-control" name="duration" placeholder="No. Months">
+                                </div>
+                                <div class="form-group col-auto d-flex align-items-end">
+                                    <span>or</span>
                                 </div>
                                 <div class="form-group col">
-                                    <input type="text"  class="form-control" name="part-number-2" placeholder="Part Number">
+                                    <label for="mile-amount">Number of Miles</label>
+                                    <input type="text"  class="form-control" name="mile-amount" placeholder="No. Miles">
                                 </div>
                             </div>
                         </div>
