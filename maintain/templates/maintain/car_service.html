@@ -49,8 +49,9 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{% url 'car_service' %}" method="POST">
+                    <form id="service-form" action="{% url 'car_service' %}" method="POST">
                         {% csrf_token %}
+                        <input type="hidden" name="reminder-id">
                         <div class="form-row">
                             <div class="form-group col-sm">
                                 <label for="date">Date of Service</label>

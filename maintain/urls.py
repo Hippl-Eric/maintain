@@ -10,4 +10,5 @@ urlpatterns = [
     path("mileage", views.car_mileage_view, name="car_mileage"),
     path("service", views.car_service_view, name="car_service"),
     path("plotlogs", views.mileage_logs, name="plotlogs"),
+    path("servicedata", views.service_data),
 ]

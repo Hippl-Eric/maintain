@@ -183,6 +183,16 @@ def car_service_view(request):
                 reminder.mileage = reminder_mile
             reminder.save()
 
+        # Update previous reminder complete
+        if request.POST["reminder-id"]:
+            rem_id = request.POST["reminder-id"]
+            try:
+                past_rem = Reminder.objects.get(id=rem_id, service__log__car=car)
+                past_rem.completed = True
+                past_rem.save()
+            except Reminder.DoesNotExist:
+                pass
+
         return redirect(reverse("car_service"))
 
     else:
@@ -274,3 +284,26 @@ def mileage_logs(request):
             "error": "PUT request required."
         }, status=400)
 
+def service_data(request):
+    if request.method == "PUT":
+
+        # Load request data and grab reminder id
+        data = json.loads(request.body)
+        rem_id = data.get("rem_id")
+
+        # Ensure valid reminder
+        try:
+            car = get_default_car(request)
+            reminder = Reminder.objects.get(service__log__car=car, id=rem_id)
+        except Reminder.DoesNotExist:
+            return JsonResponse({"error": "Invalid request"}, status=400)
+        
+        # Serialize reminder and return data
+        reminder_data = reminder.serialize()
+        return JsonResponse(json.dumps(reminder_data), safe=False)
+
+    # PUT method required
+    else:
+        return JsonResponse({
+            "error": "PUT request required."
+        }, status=400)

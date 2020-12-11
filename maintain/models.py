@@ -85,7 +85,7 @@ class Car(models.Model):
         }
     
 class Mileage_Log(models.Model):
-    timestamp = models.DateTimeField(auto_created=True)
+    timestamp = models.DateField(default=date.today())
     mileage = models.PositiveIntegerField()
     car = models.ForeignKey("Car", on_delete=models.CASCADE, related_name="logs")
 
@@ -122,3 +122,28 @@ class Reminder(models.Model):
 
     def __str__(self):
         return f"{self.service}, {self.date}, {self.mileage}, {self.completed}"
+
+    def duration(self):
+        """ Return the time delta between service and reminder dates """
+        log_date = self.service.log.timestamp
+        duration = self.date - log_date
+        return int(round((duration.days/365) * 12))
+        # return duration
+
+    def mile_amount(self):
+        log_mileage = self.service.log.mileage
+        mile_amount = self.mileage - log_mileage
+        return mile_amount
+
+    def serialize(self):
+        return {
+            "reminder": {
+                "id": self.id,
+                "duration": self.duration(),
+                "mile-amount": self.mile_amount(),
+            },
+            "service": {
+                "name": self.service.name,
+                "parts": [{"name": part.name, "number": part.number} for part in self.service.parts.all()]
+            }
+        }
