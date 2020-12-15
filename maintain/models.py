@@ -128,7 +128,6 @@ class Reminder(models.Model):
         log_date = self.service.log.timestamp
         duration = self.date - log_date
         return int(round((duration.days/365) * 12))
-        # return duration
 
     def mile_amount(self):
         log_mileage = self.service.log.mileage
