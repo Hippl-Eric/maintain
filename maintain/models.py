@@ -72,7 +72,7 @@ class Car(models.Model):
         return f"{self.year} {self.make} {self.model}, {self.current_mileage} miles"
 
     def __str__(self):
-        return f"{self.make} {self.model}"
+        return f"{self.year} {self.make} {self.model}"
 
     def serialize(self):
         return {

@@ -1,3 +1,4 @@
+import csv
 import json
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
@@ -307,3 +308,34 @@ def service_data(request):
         return JsonResponse({
             "error": "PUT request required."
         }, status=400)
+
+def csv_data(request):
+
+    # Get car from session
+    car = get_default_car(request)
+
+    # Get past service logs
+    past_service_logs = car.get_service_logs
+
+    # Parse to csv rows
+    header_row = ["Vehicle", "Date", "Mileage", "Service Name", "Parts"]
+    csv_rows = []
+    for log in past_service_logs:
+        row =[log.car, log.timestamp, log.mileage]
+        service = log.services.get()
+        row.append(service.name)
+        parts = ""
+        for part in service.parts.all():
+            p = f"({part.name}, {part.number}) "
+            parts += p
+        row.append(parts)
+        csv_rows.append(row)
+
+    # https://docs.djangoproject.com/en/3.1/howto/outputting-csv/#using-the-python-csv-library
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="service_log.csv"'
+    writer = csv.writer(response)
+    writer.writerow(header_row)
+    writer.writerows(csv_rows)
+    return response

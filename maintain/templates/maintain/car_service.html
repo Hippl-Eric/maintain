@@ -32,7 +32,7 @@
         {% endwith %}
     </div>
     <div>
-        Completed Services:
+        Completed Services:<a href="{% url 'csvdata' %}">Export to csv</a>
         {% for log in past_service_logs %}
             {% include "maintain/service-block.html" %}
         {% endfor %}
