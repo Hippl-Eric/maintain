@@ -25,7 +25,7 @@ class Car(models.Model):
     owner = models.ForeignKey("User", on_delete=models.CASCADE, related_name="cars")
     default = models.BooleanField(default=False)
 
-    # Use property to get current mileage from mileage log (returns int)
+    # Get current mileage from mileage log (returns int)
     @property
     def current_mileage(self):
         log = self.logs.order_by(F('mileage').desc())
@@ -47,7 +47,10 @@ class Car(models.Model):
     def get_service_logs(self):
         return self.logs.filter(services__name__isnull=False).order_by(F('timestamp').desc())
 
-    # TODO Return all logs that had fuel logged
+    # Return all logs that had fuel logged
+    @property
+    def get_fuel_logs(self):
+        return self.logs.filter(fuel__amount__isnull=False).order_by('timestamp')
 
     # Return all upcoming reminders
     @property
@@ -123,12 +126,13 @@ class Reminder(models.Model):
     def __str__(self):
         return f"{self.service}, {self.date}, {self.mileage}, {self.completed}"
 
+    # Return the time delta between service and reminder dates
     def duration(self):
-        """ Return the time delta between service and reminder dates """
         log_date = self.service.log.timestamp
         duration = self.date - log_date
         return int(round((duration.days/365) * 12))
 
+    # Return the mileage delta between service and reminder
     def mile_amount(self):
         log_mileage = self.service.log.mileage
         mile_amount = self.mileage - log_mileage

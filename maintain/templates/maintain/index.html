@@ -5,7 +5,7 @@
     <div class="row">
         {% for car in cars %}
             <div class="col d-flex justify-content-center">
-                <div id="{{ car.id }}" class="car-button d-flex align-items-center" onclick="setDefaultCar(this, event)">
+                <div id="{{ car.id }}" class="car-button d-flex align-items-center">
                     <a href="{% url 'car_mileage' %}" class="d-flex justify-content-center">
                         <span class="d-flex align-items-center">
                             {{ car.year }}<br>
@@ -64,8 +64,8 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="current-mile" class="col-3 col-form-label">Current Mileage</label>
-                            <div class="col">
+                            <label for="current-mile" class="col-sm-3 col-form-label">Current Mileage</label>
+                            <div class="col-sm">
                                 <input type="text" class="form-control" name="current-mile" placeholder="Current Mileage" min="0" required>
                             </div>
                         </div>
@@ -73,14 +73,14 @@
                             Optional:
                         </small>
                         <div class="form-group row">
-                            <label for="purchase-date" class="col-3 col-form-label">Purchase Date</label>
-                            <div class="col">
+                            <label for="purchase-date" class="col-sm-3 col-form-label">Purchase Date</label>
+                            <div class="col-sm">
                                 <input type="text" class="form-control" name="purchase-date" placeholder="Purchase Date (MM/DD/YYYY)" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="starting-mile" class="col-3 col-form-label">Starting Mileage</label>
-                            <div class="col">
+                            <label for="starting-mile" class="col-sm-3 col-form-label">Starting Mileage</label>
+                            <div class="col-sm">
                                 <input type="text" class="form-control" name="starting-mile" placeholder="Starting Mileage" min="0" required>
                             </div>
                         </div>
@@ -95,5 +95,4 @@
             </div>
         </div>
     </div>
-    
 {% endblock %}

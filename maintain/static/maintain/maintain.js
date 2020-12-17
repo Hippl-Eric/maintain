@@ -1,8 +1,16 @@
-function setDefaultCar(elem, event) {
+/* Set the default car for session */
+if (document.querySelector(".car-button")) {
+    const carBtns = document.querySelectorAll(".car-button");
+    carBtns.forEach((carBtn) => {
+        carBtn.addEventListener("click", setDefaultCar, true);
+    });
+};
+
+function setDefaultCar(event) {
     event.preventDefault();
 
     // Grab the car id and site csrf token
-    const car_id = elem.id;
+    const car_id = this.id;
     const csrftoken = Cookies.get('csrftoken');
 
     // Create request for get_car
@@ -21,13 +29,14 @@ function setDefaultCar(elem, event) {
         if (response.ok) {
 
             // Route to original anchor href
-            const childAnchor = elem.children
+            const childAnchor = this.children
             const href = childAnchor[0].href
             window.location.href = href;
         };
     })
 };
 
+/* Add a part to the service form */
 if (document.getElementById("addPartBtn")) {
     document.getElementById("addPartBtn").addEventListener("click", addPart, true);
 }
@@ -60,6 +69,7 @@ function addPart() {
     partGroup.append(part)
 }
 
+/* Fetch a reminder's info and call fillServiceForm */
 if (document.querySelector(".reminder-service")) {
     const serviceLinks = document.querySelectorAll(".reminder-service");
     serviceLinks.forEach((service) => {
@@ -100,6 +110,7 @@ function getService() {
     });
 };
 
+/* Pre-fill the service form with reminder data */
 function fillServiceForm(data, remID) {
 
     // Parse data
@@ -136,7 +147,7 @@ function fillServiceForm(data, remID) {
     reminderID.value = remID;
 }
 
-// Reset Service form when Bootstrap modal is closed
+/* Reset service form when Bootstrap modal is closed */
 $('#NewServiceModal').on('hidden.bs.modal', function () {
     resetForm()
 })    

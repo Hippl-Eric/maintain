@@ -1,3 +1,4 @@
+/* Grab the plotting canvas and user Chart.js to plot mileage data */
 if (document.getElementById('mileage-plot')) {
 
     // Determine default or all-cars
@@ -20,7 +21,8 @@ if (document.getElementById('mileage-plot')) {
             })
         }
     );
-
+    
+    // Fetch plot data
     fetch(request)
     .then(response => response.json())
     .then(data => {

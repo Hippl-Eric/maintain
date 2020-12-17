@@ -85,7 +85,7 @@ PUT Requests:<br>
 The mileage_logs and service_data functions receive PUT requests from the site JavaScript.  The mileage_logs request specifies whether all cars' or just the default car's data should be returned.  Mileage data is returned in JSON for plotting.  The service_data request is used to pre-fill the service form based upon a reminder.  A serializer method was created on the Reminder model to return reminder data in JSON.
 
 Export CSV Data:<br>
-The user has the option to export their service logs to csv.  The csv_data view parses the user's service logs in reverse chronological order, and writes a csv file using Python's csv module.  Django's FileResponse returns an attachment, and the user's browser prompts the user to save the file.
+The user has the option to export their service logs to csv.  The csv_data view parses the user's service logs in reverse chronological order, and writes a csv file using Python's csv module.  The Content-Disposition header in the response is set to "attachment", and the user's browser prompts the user to save the file.
 
 Helper Functions:<br>
 In addition to the main views, helper functions were created.  As stated, the site is built around the concept of a "default car".  To make manipulating the default car easier, functions to set, update, and get the default car were created.  
@@ -152,13 +152,13 @@ The sites styling is basic and mainly uses Bootstrap components.  The "car butto
 ### What I Learned
 - Designing Django models to satisfy application architecture - A lot of time was spent before any code, writing down and visualizing the final application.  Coming up with a list of requirements, led to the model structure used for the app.
 
-- More advanced filtering in Django - The get_reminders_upcoming property of the Car model in models.py utilizes reverse relationships, chaining, and "or" logic requiring the Django Q object.
+- More advanced query filtering in Django - The get_reminders_upcoming property of the Car model in models.py utilizes reverse relationships, chaining, and "or" logic requiring the Django Q object.
 
 - Reinforced knowledge of data structures - Parsing database query sets into JSON and csv format.
 
 - Better understanding of the POST data object returned from HTML forms - The log service form allows the user to add parts to the form.  The backend needed to be able to handel a variable number of parts for a service.  Iterating through the POST dictionary-like object was required.
 
-- Using the datetime module in python and sending to a date object in JavaScript.
+- Return a file object through a HttpResponse by setting the Content-Disposition header to "attachment".
 
 ### Contact
 

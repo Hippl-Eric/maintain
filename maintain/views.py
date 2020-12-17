@@ -42,7 +42,7 @@ def index(request):
 
         return redirect(reverse("index"))
 
-    # GET index page
+    # Return index page and all cars
     else:
 
         # Get all cars owned by user
@@ -103,6 +103,8 @@ def car_mileage_view(request):
 
     # Get car from session
     car = get_default_car(request)
+    if not car:
+        return redirect(reverse("index"))
 
     # Mileage log form submission
     if request.method == "POST":
@@ -123,12 +125,11 @@ def car_mileage_view(request):
 
         return redirect(reverse('car_mileage'))
 
+    # Return mileage page
     else:
         
-        # Get overdue reminders
+        # Get overdue reminders (for alert)
         overdue_reminders = car.get_reminders_overdue
-
-        # Return car mileage page
         return render(request, "maintain/car_mileage.html", {
             "car": car,
             "overdue_reminders": overdue_reminders,
@@ -139,7 +140,10 @@ def car_service_view(request):
 
     # Get car from session
     car = get_default_car(request)
-        
+    if not car:
+        return redirect(reverse("index"))
+    
+    # New submission from service form
     if request.method == "POST":
 
         # Ensure minimum form data received
@@ -196,15 +200,14 @@ def car_service_view(request):
 
         return redirect(reverse("car_service"))
 
+    # Return service page
     else:
 
         # Get past service logs
         past_service_logs = car.get_service_logs
 
-        # Get upcoming reminders
+        # Get upcoming and overdue reminders
         upcoming_reminders = car.get_reminders_upcoming
-
-        # Get overdue reminders
         overdue_reminders = car.get_reminders_overdue
 
         # Return car service page
@@ -214,8 +217,8 @@ def car_service_view(request):
             "overdue_reminders": overdue_reminders,
         })
 
-@login_required(login_url='login')
 def set_default_car(request, car_id):
+    """ JS: Set the default car clicked by user """
     try:
         car = request.user.cars.get(pk=car_id)
     except:
@@ -226,7 +229,7 @@ def set_default_car(request, car_id):
     return HttpResponse(status=200)
 
 def update_default_car(request, car):
-    """ Set/update car in the request session """
+    """ Helper: Set/update car in the database and request session """
     
     # Check database for previous default car and clear
     def_car = request.user.default_car
@@ -242,7 +245,7 @@ def update_default_car(request, car):
     request.session['default_car'] = car.id
 
 def get_default_car(request):
-    """ Return car object from id stored in session """
+    """ Helper: Return car object from id stored in session """
     try:
         car_id = request.session.get("default_car")
         car = request.user.cars.get(pk=car_id)
@@ -251,6 +254,7 @@ def get_default_car(request):
         return None
 
 def mileage_logs(request):
+    """ JS: Return mileage log data used for plotting """
     if request.method == "PUT":
 
         # Load request data
@@ -274,11 +278,6 @@ def mileage_logs(request):
                 data.append(obj)
             return JsonResponse(json.dumps(data), safe=False)
 
-        # Plot MPG
-        if data.get("type") == "mpg":
-            pass
-            # TODO
-
     # PUT method required
     else:
         return JsonResponse({
@@ -286,6 +285,7 @@ def mileage_logs(request):
         }, status=400)
 
 def service_data(request):
+    """ JS: Return reminder data to pre-fill service form """
     if request.method == "PUT":
 
         # Load request data and grab reminder id
@@ -310,6 +310,7 @@ def service_data(request):
         }, status=400)
 
 def csv_data(request):
+    """ Return csv file object for default car's past services """
 
     # Get car from session
     car = get_default_car(request)

@@ -17,7 +17,6 @@
             </a>
         </h4>
     </div>
-
     <h1>Overview</h1>
     {% with data=car.serialize %}
         {% for key, val in data.items %}
@@ -44,11 +43,11 @@
                         {% csrf_token %}
                         <div class="form-group row">
                             <label for="date" class="col-1 col-form-label">Date</label>
-                            <div class="col">
+                            <div class="form-group col-sm">
                                 <input type="text" class="form-control" name="date" placeholder="Date (MM/DD/YYYY)" required>
                             </div>
                             <label for="mileage" class="col-1 col-form-label">Mileage</label>
-                            <div class="col">
+                            <div class="form-group col-sm">
                                 <input type="text" class="form-control" name="mileage" placeholder="Mileage" required>
                             </div>
                         </div>
@@ -56,14 +55,14 @@
                             Optional:
                         </small>
                         <div class="form-group row">
-                            <label for="fuel" class="col-2 col-form-label">Fuel Amount</label>
-                            <div class="col-5">
+                            <label for="fuel" class="col-sm-2 col-form-label">Fuel Amount</label>
+                            <div class="col-sm-5">
                                 <input type="text" class="form-control" name="fuel" placeholder="Fuel Amount (gal)">
                             </div>
                         </div>
                         <hr>
                         <div class="row justify-content-between">
-                            <div class="col-auto">
+                            <div class="col-sm-auto">
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
@@ -72,5 +71,4 @@
             </div>
         </div>
     </div>
-    
 {% endblock %}

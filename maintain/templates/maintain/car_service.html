@@ -1,7 +1,5 @@
 {% extends "maintain/layout.html" %}
 
-{% block page_title %}{{ car.make }}{% endblock %}
-
 {% block body %}
     <h1>Services</h1>
     <div class="alert alert-primary">
@@ -20,6 +18,8 @@
         {% with alert='danger' %}
             {% for reminder in overdue_reminders %}
                 {% include "maintain/reminder-block.html" %}
+            {% empty %}
+                <h4>No overdue services.</h4>
             {% endfor %}
         {% endwith %}
     </div>
@@ -28,13 +28,17 @@
         {% with alert='warning' %}
             {% for reminder in upcoming_reminders %}
                 {% include "maintain/reminder-block.html" %}
+            {% empty %}
+                <h4>No upcoming services.</h4>
             {% endfor %}
         {% endwith %}
     </div>
     <div>
-        Completed Services:<a href="{% url 'csvdata' %}">Export to csv</a>
+        Completed Services: <a href="{% url 'csvdata' %}">Export to csv</a>
         {% for log in past_service_logs %}
             {% include "maintain/service-block.html" %}
+        {% empty %}
+            <h4>No services.  Log a service to start tracking!</h4>
         {% endfor %}
     </div>
 
@@ -63,12 +67,10 @@
                             </div>
                         </div>
                         <hr>
-
                         <div class="form-group">
                             <label for="service">Service</label>
                             <input type="text"  class="form-control" name="service" placeholder="Service Name" required>
                         </div>
-
                         <div class="form-group">
                             <label for="part">Parts:<button id="addPartBtn" type="button" class="btn btn-link btn-sm">Add Part</button></label>
                             <div id="part-group">
@@ -114,8 +116,4 @@
             </div>
         </div>
     </div>
-
-
-
-
 {% endblock %}
