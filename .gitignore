@@ -5,6 +5,5 @@
 **/__pycache__/
 *.pyc
 db.sqlite3
-*.txt
 /video
 *.zip
