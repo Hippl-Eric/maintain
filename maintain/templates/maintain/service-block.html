@@ -11,12 +11,12 @@
         {% for service in log.services.all %}
             <div class="row">
                 <div class="col">
-                    <a class="alert-link" data-toggle="collapse" href="#collapseExample{{ service.id }}" aria-expanded="false" aria-controls="collapseExample{{ service.id }}">
+                    <a class="alert-link" data-toggle="collapse" href="#parts-{{ service.id }}" aria-expanded="false" aria-controls="parts-{{ service.id }}">
                         Service: {{ service.name }}
                     </a>
                 </div>
             </div>
-            <div class="collapse" id="collapseExample{{ service.id }}">
+            <div class="collapse" id="parts-{{ service.id }}">
                 <div class="row">
                     <div class="col">
                         Parts:
